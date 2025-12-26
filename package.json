@@ -1,0 +1,27 @@
+{
+  "name": "my-next-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "2.13.3",
+    "md5": "2.3.0",
+    "next": "14.2.3",
+    "node-fetch": "^3.3.2",
+    "react": "^18",
+    "react-dom": "^18",
+    "stream": "0.0.2",
+    "swr": "^2.0.0"
+  },
+  "devDependencies": {
+    "axios": "^1.6.5",
+    "eslint": "^8",
+    "eslint-config-next": "14.1.0",
+    "moment-timezone": "^0.5.45"
+  }
+}
