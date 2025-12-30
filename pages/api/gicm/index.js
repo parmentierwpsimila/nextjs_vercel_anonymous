@@ -84,6 +84,26 @@ export default async function handler(req, res) {
       responseMessage = "Payment and download request received. Payment instructions will be sent to your email.";
       break;
 
+    case 5: // 支付下载
+      markdownContent = `🛒 **灰度洞察--联系我们页面**\n
+**邮箱地址：** ${user_email}\n
+**申请时间：** ${new Date().toLocaleString("zh-CN")}\n
+**下载页面：** ${url}\n
+**用户请求：** contact页面\n
+**重要提示：** 用户需要联系我们进一步沟通`;
+      responseMessage = "Payment and download request received. Payment instructions will be sent to your email.";
+      break;
+
+    case 6: // 支付下载
+      markdownContent = `🛒 **灰度洞察--投稿申请**\n
+**邮箱地址：** ${user_email}\n
+**申请时间：** ${new Date().toLocaleString("zh-CN")}\n
+**下载页面：** ${url}\n
+**用户请求：** 投稿页面\n
+**重要提示：** 用户需要向我们投稿`;
+      responseMessage = "Payment and download request received. Payment instructions will be sent to your email.";
+      break;
+
     default:
       markdownContent = `❓ **灰度洞察--未知类型申请**\n
 **邮箱地址：** ${user_email}\n
