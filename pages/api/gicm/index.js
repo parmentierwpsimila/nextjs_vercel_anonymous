@@ -133,6 +133,7 @@ export default async function handler(req, res) {
 
 
     let comment_json = {
+      website_name : 'grayscale',
       request_type: request_type,
       user_email: user_email,
       url: url
@@ -219,6 +220,7 @@ export default async function handler(req, res) {
     }
   }
 }
+
 
 
 
