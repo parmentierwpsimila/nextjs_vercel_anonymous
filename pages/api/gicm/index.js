@@ -1,4 +1,6 @@
 import axios from "axios";
+import cos from  "cos-nodejs-sdk-v5" ;
+import stream  from 'stream';
 
 export default async function handler(req, res) {
   // 处理 CORS 预检请求
@@ -217,4 +219,5 @@ export default async function handler(req, res) {
     }
   }
 }
+
 
