@@ -14,9 +14,9 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     // 为错误响应也设置 CORS 头
     res.setHeader('Access-Control-Allow-Origin', '*');
-    return res.status(405).json({ 
+    return res.status(405).json({
       success: false,
-      message: "Method Not Allowed" 
+      message: "Method Not Allowed"
     });
   }
 
@@ -27,16 +27,16 @@ export default async function handler(req, res) {
 
   // 验证必需字段
   if (!body.type || !body.email) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       success: false,
-      message: "Missing required fields: type and email are required" 
+      message: "Missing required fields: type and email are required"
     });
   }
 
   const request_type = parseInt(body.type);
   const user_email = body.email;
   const url = body.url || "Not provided";
-  
+
   // 企业微信 Webhook URL
   const tencent_webhook =
     "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=a4d9df92-14dd-4d90-8f37-4f4ac46662a3";
@@ -128,8 +128,61 @@ export default async function handler(req, res) {
     // 记录日志（可选）
     console.log(`Request processed - Type: ${request_type}, Email: ${user_email}, URL: ${url}`);
 
+
+
+    let comment_json = {
+      request_type: request_type,
+      user_email: user_email,
+      url: url
+    }
+    let json_str = JSON.stringify(comment_json)
+
+    const secretId = ''; 
+    const secretKey = ''; 
+    const bucket = 'webtool-1254457405'; 
+    const region = 'ap-singapore';
+
+    const cosInstance = new cos({
+      SecretId: secretId,
+      SecretKey: secretKey
+    });
+
+    // 生成随机字符串
+    const randomString = Math.random().toString(36).substring(2, 12);
+
+    // 获取当前日期
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    // 构造文件名
+    const fileName = `/grayscaleinsight/emails/${currentDate}_${randomString}.txt`;
+
+    // 要上传的字符串内容
+    const stringToUpload = json_str;
+
+    // 将字符串写入临时文件
+    // 创建可读流
+    const readableStream = new stream.Readable();
+    readableStream.push(stringToUpload);
+    readableStream.push(null);
+
+
+    try {
+      await cosInstance.putObject({
+        Bucket: bucket,
+        Region: region,
+        Key: fileName,
+        Body: readableStream
+      });
+
+      console.log('上传成功:', `https://${bucket}.cos.${region}.myqcloud.com/${fileName}`);
+      res.status(200).json({ result: 1 });
+    } catch (err) {
+      console.error('上传失败:', err);
+      res.status(499).json({ result: 0, message: '未知原因导致失败' });
+    }
+
     // 返回成功响应给客户端
-    return res.status(200).json({ 
+    return res.status(200).json({
       success: true,
       message: responseMessage,
       data: {
@@ -141,22 +194,22 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Webhook error:", error.response?.data || error.message);
-    
+
     // 根据错误类型返回不同的响应
     if (error.response) {
-      return res.status(502).json({ 
+      return res.status(502).json({
         success: false,
         message: "Webhook service error",
         error: error.response.data
       });
     } else if (error.request) {
-      return res.status(504).json({ 
+      return res.status(504).json({
         success: false,
         message: "Webhook request timeout",
         error: "No response received from webhook service"
       });
     } else {
-      return res.status(500).json({ 
+      return res.status(500).json({
         success: false,
         message: "Internal server error",
         error: error.message
