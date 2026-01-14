@@ -137,8 +137,8 @@ export default async function handler(req, res) {
     }
     let json_str = JSON.stringify(comment_json)
 
-    const secretId = ''; 
-    const secretKey = ''; 
+    const secretId = '${{ secrets.COS_KEY }}'; 
+    const secretKey = '${{ secrets.COS_SECRET }}'; 
     const bucket = 'webtool-1254457405'; 
     const region = 'ap-singapore';
 
@@ -217,3 +217,4 @@ export default async function handler(req, res) {
     }
   }
 }
+
